@@ -6,8 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
   <title>Vanilla JavaScript App!</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jwt-decode/2.2.0/index.min.js"></script>
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jwt-decode/3.0.0/jwt-decode.min.js"></script> -->
 </head>
 
 <body>
@@ -15,17 +13,16 @@
     <h1>Vanilla JavaScript App</h1>
   </main>
   <script>
+    const jwt = require('jsonwebtoken');
+    const axios = require('axios');
+
     async function validateIdToken(idToken) {
-        // Azure AD B2CのOpenID設定を取得します
-        const response = await fetch('https://onoderacorp.b2clogin.com/onoderacorp.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1A_REDIRECTJUDGMENT_SIGNUP_SIGNIN');
-        const openidConfig = await response.json();
-        const keys = openidConfig.jwks_uri;
+        // Azure AD B2CのOpenID設定を取得します。https://onoderacorp.b2clogin.com/onoderacorp.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_REDIRECTJUDGMENT_SIGNUP_SIGNIN&client_id=c818b76b-ddeb-4f34-a395-26f4555bf194&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fzealous-dune-0572c7900.4.azurestaticapps.net&scope=openid&response_type=id_token&prompt=login
+        const openidConfig = await axios.get('https://onoderacorp.b2clogin.com/onoderacorp.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1A_REDIRECTJUDGMENT_SIGNUP_SIGNIN');
+        const keys = openidConfig.data.jwks_uri;
 
-        // id_tokenをデコードします
-        const decodedToken = jwt_decode(idToken);
-
-        // ここで公開鍵とデコードしたトークンを使用して署名を検証するロジックを追加します
-        // ブラウザでは署名の検証が難しいため、通常はサーバーサイドで行います
+        // id_tokenをデコードし、署名を検証します
+        const decodedToken = jwt.verify(idToken, keys, { algorithms: ['RS256'] });
 
         return decodedToken;
     }
