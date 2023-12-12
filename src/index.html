@@ -22,7 +22,8 @@
 
         // id_tokenを取得します
         const idToken = params.get('id_token');
-
+        console.log(idToken);
+        
         // id_tokenを検証します
         validateIdToken(idToken)
             .then(decodedToken => {
