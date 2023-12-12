@@ -15,7 +15,7 @@
   <script>
     async function validateIdToken(idToken) {
     // Azure AD B2CのOpenID設定を取得します
-    const response = await fetch('https://your-tenant.b2clogin.com/your-tenant.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=b2c_1_signupsignin1');
+    const response = await fetch('https://onoderacorp.b2clogin.com/onoderacorp.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1A_REDIRECTJUDGMENT_SIGNUP_SIGNIN');
     const openidConfig = await response.json();
     const keys = openidConfig.jwks_uri;
 
