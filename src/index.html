@@ -13,29 +13,48 @@
     <h1>Vanilla JavaScript App</h1>
   </main>
   <script>
-    const jwt = require('jsonwebtoken');
-    const axios = require('axios');
+    // URLフラグメントを取得します
+    const fragment = window.location.hash;
 
-    async function validateIdToken(idToken) {
-        // Azure AD B2CのOpenID設定を取得します。https://onoderacorp.b2clogin.com/onoderacorp.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_REDIRECTJUDGMENT_SIGNUP_SIGNIN&client_id=c818b76b-ddeb-4f34-a395-26f4555bf194&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fzealous-dune-0572c7900.4.azurestaticapps.net&scope=openid&response_type=id_token&prompt=login
-        const openidConfig = await axios.get('https://onoderacorp.b2clogin.com/onoderacorp.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1A_REDIRECTJUDGMENT_SIGNUP_SIGNIN');
-        const keys = openidConfig.data.jwks_uri;
+    // フラグメントが存在する場合、先頭の'#'を削除します
+    if (fragment.startsWith('#')) {
+        const params = new URLSearchParams(fragment.slice(1));
 
-        // id_tokenをデコードし、署名を検証します
-        const decodedToken = jwt.verify(idToken, keys, { algorithms: ['RS256'] });
+        // id_tokenを取得します
+        const idToken = params.get('id_token');
 
-        return decodedToken;
+        // id_tokenを検証します
+        validateIdToken(idToken)
+            .then(decodedToken => {
+                console.log(decodedToken);
+            })
+            .catch(err => {
+                console.error('Token validation failed', err);
+            });
     }
+    // const jwt = require('jsonwebtoken');
+    // const axios = require('axios');
 
-    // URLからid_tokenを取得します
-    const idToken = 'your-id-token-from-url';
-    validateIdToken(idToken)
-        .then(decodedToken => {
-            console.log(decodedToken);
-        })
-        .catch(err => {
-            console.error('Token validation failed', err);
-        });
+    // async function validateIdToken(idToken) {
+    //     // Azure AD B2CのOpenID設定を取得します。https://onoderacorp.b2clogin.com/onoderacorp.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_REDIRECTJUDGMENT_SIGNUP_SIGNIN&client_id=c818b76b-ddeb-4f34-a395-26f4555bf194&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fzealous-dune-0572c7900.4.azurestaticapps.net&scope=openid&response_type=id_token&prompt=login
+    //     const openidConfig = await axios.get('https://onoderacorp.b2clogin.com/onoderacorp.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1A_REDIRECTJUDGMENT_SIGNUP_SIGNIN');
+    //     const keys = openidConfig.data.jwks_uri;
+
+    //     // id_tokenをデコードし、署名を検証します
+    //     const decodedToken = jwt.verify(idToken, keys, { algorithms: ['RS256'] });
+
+    //     return decodedToken;
+    // }
+
+    // // URLからid_tokenを取得します
+    // const idToken = 'your-id-token-from-url';
+    // validateIdToken(idToken)
+    //     .then(decodedToken => {
+    //         console.log(decodedToken);
+    //     })
+    //     .catch(err => {
+    //         console.error('Token validation failed', err);
+    //     });
   </script>
 </body>
 
