@@ -58,6 +58,8 @@
       sendIdTokenToAzureFunctions(idToken)
           .then(data => {
               console.log(data);
+              // Azure Functionsに遷移します
+            window.location.href = "http://localhost:7150/api/httpexample?idToken=" + encodeURIComponent(idToken);
           })
           .catch(err => {
               console.log(data);
