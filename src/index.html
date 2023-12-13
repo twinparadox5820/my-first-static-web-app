@@ -51,17 +51,15 @@
 
       // id_tokenを取得します
       const idToken = params.get('id_token');
-      console.log(idToken);
 
       // idTokenをAzure Functionsに送信します
       sendIdTokenToAzureFunctions(idToken)
           .then(data => {
-              console.log(data);
+            console.log(data);
               // Azure Functionsに遷移します
             window.location.href = "http://localhost:7150/api/httpexample?idToken=" + encodeURIComponent(idToken);
           })
           .catch(err => {
-              console.log(data);
               console.error('Failed to send idToken to Azure Functions', err);
           });
   }
