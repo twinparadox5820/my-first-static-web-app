@@ -27,12 +27,11 @@
   </script> -->
 <script>
   async function sendIdTokenToAzureFunctions(idToken) {
-      const response = await fetch('http://localhost:7150/api/httpexample', {
-          method: 'POST',
+      const response = await fetch(`http://localhost:7150/api/httpexample?idToken=${encodeURIComponent(idToken)}`, {
+          method: 'GET',
           headers: {
               'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ idToken: idToken })
+          }
       });
 
       if (!response.ok) {
